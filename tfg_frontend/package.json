@@ -1,9 +1,9 @@
 {
-  "name": "angular-seed",
+  "name": "frontend",
   "private": true,
-  "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
+  "version": "1.0.0",
+  "description": "Frontend do tfg de denisgranha",
+  "repository": "https://me.denisgranha.com",
   "license": "MIT",
   "devDependencies": {
     "karma": "~0.10",

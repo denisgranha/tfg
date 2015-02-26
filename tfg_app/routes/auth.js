@@ -53,6 +53,7 @@ router.post('/', function(req, res, next){
                     };
 
                     var token = jwt.sign({ email: user.email },cert, options);
+
                     res.send(
                         {
                             status:"success",
