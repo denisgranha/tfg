@@ -1,12 +1,25 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('myApp', [
-  'ngRoute',
-  'myApp.view1',
-  'myApp.view2',
-  'myApp.version'
+var myApp = angular.module('myApp', [
+    'ngRoute',
+    'ui.bootstrap',
+    'angular-jwt'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/view1'});
-}]);
+  $routeProvider.
+      when('/login', {
+          templateUrl: 'partials/login.html',
+          controller: 'LoginCtrl'
+      }).
+      when('/signup', {
+          templateUrl: 'partials/signup.html',
+          controller: 'SignUpCtrl'
+      }).
+      otherwise({redirectTo: '/login'});
+}]).run(
+    ['$rootScope', function($rootScope){
+        $rootScope.backend = "http://localhost:3000/";
+    }]
+);
+

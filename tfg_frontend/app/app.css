@@ -28,3 +28,28 @@
   content: "";
   padding: 0;
 }
+
+
+.loginbox{
+    margin-top:50px;
+}
+
+.forgot-password{
+    float:right; font-size: 80%; position: relative; top:-10px
+}
+
+.login-body{
+    padding-top:30px
+}
+
+.login-input{
+    margin-bottom: 25px
+}
+
+.login-button{
+    margin-top:10px
+}
+
+.login-separator{
+    border-top: 1px solid#888; padding-top:15px; font-size:85%
+}
