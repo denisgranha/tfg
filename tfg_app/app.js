@@ -10,7 +10,6 @@ var user = require('./routes/user');
 var auth = require('./routes/auth');
 
 // MongoDB Code
-var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var db;
 
@@ -38,6 +37,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+//CORS Security for integration with Angularjs
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 //Data Validator
 app.use(expressValidator([]));
