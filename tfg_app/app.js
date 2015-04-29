@@ -3,29 +3,46 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var fileManager = require('./helpers/fileManager');
+//Request Parser for multipart
+var multer  = require('multer');
+//Request Parser for Body
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var auth = require('./routes/auth');
+var patient = require('./routes/patient');
+var image = require('./routes/image');
 
 // MongoDB Code
 var mongoose = require('mongoose');
-var db;
 
 config = require("./config.js");
 
-var expressValidator = require('express-validator');
-
 var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//Clean uploads folder
+fileManager.deleteFolderRecursive(__dirname+"/uploads");
+
+app.use(
+    multer(
+        {
+            dest: __dirname+'/uploads/'
+        }
+    )
+);
 
 if (app.get('env') === 'test') {
 
-    db = mongoose.connect('mongodb://localhost/tfg_test');
+    mongoose.connect('mongodb://localhost/tfg_test');
 
 }
 else{
-    db  = mongoose.connect('mongodb://localhost/tfg');
+    mongoose.connect('mongodb://localhost/tfg');
 }
 
 // view engine setup
@@ -35,8 +52,7 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
 
 //CORS Security for integration with Angularjs
 app.use(function(req, res, next) {
@@ -45,21 +61,18 @@ app.use(function(req, res, next) {
     next();
 });
 
-//Data Validator
-app.use(expressValidator([]));
-
 app.use(cookieParser());
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Make our db accessible to our router
-app.use(function(req,res,next){
-    req.db = db;
-    next();
-});
+
 
 app.use('/', routes);
 app.use('/user', user);
 app.use('/auth',auth);
+app.use('/patient',patient);
+app.use('/image',image);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

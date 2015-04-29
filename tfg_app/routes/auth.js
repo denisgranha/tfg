@@ -4,21 +4,33 @@ var bcrypt = require('bcrypt'); //Uso bcrypt para encriptar la contraseña
 var User = require('../models/User.js');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
+var validator = require('validator');
 
 router.post('/', function(req, res, next){
     var db = req.db;
 
-    req.checkBody('pass', 'Invalid postparam').notEmpty().isAlpha();
-    req.checkBody('email', 'Invalid postparam').notEmpty().isEmail();
-
-    var errors = req.validationErrors();
-    if (errors) {
+    if(validator.isEmail(req.body.email) == false){
         res.status(400).
             send(
             {
                 status : "error",
                 content : {
-                    description: errors
+                    description: "email must be of type a@b.c",
+                    error_code: "email_format"
+                }
+            }
+        );
+        return;
+    }
+
+    if (validator.isAlphanumeric(req.body.pass) == false) {
+        res.status(400).
+            send(
+            {
+                status : "error",
+                content : {
+                    description: "pass must contain alphanumeric values",
+                    error_code: "pass_format"
                 }
             }
         );
@@ -52,7 +64,7 @@ router.post('/', function(req, res, next){
                         expiresInMinutes: 60
                     };
 
-                    var token = jwt.sign({ email: user.email },cert, options);
+                    var token = jwt.sign({ email: user.email,name: user.name },cert, options);
 
                     res.send(
                         {

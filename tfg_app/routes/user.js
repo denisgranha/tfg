@@ -2,33 +2,48 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt'); //Uso bcrypt para encriptar la contraseña
 var User = require('../models/User.js');
+var validator = require('validator');
 
-/*
-router.get('/', function(req, res) {
-  var db = req.db;
-
-  User.find(function(e,users){
-      res.send(users);
-  });
-
-
-});
-*/
 
 router.post('/', function(req, res,next) {
   var db = req.db;
 
-    req.checkBody('pass', 'Invalid postparam').notEmpty().isAlpha();
-    req.checkBody('email', 'Invalid postparam').notEmpty().isEmail();
-
-    var errors = req.validationErrors();
-    if (errors) {
+    if(validator.isEmail(req.body.email) == false){
         res.status(400).
             send(
             {
                 status : "error",
                 content : {
-                    description: errors
+                    description: "email must be of type a@b.c",
+                    error_code: "email_format"
+                }
+            }
+        );
+        return;
+    }
+
+    if (validator.isAlphanumeric(req.body.pass) == false) {
+        res.status(400).
+            send(
+            {
+                status : "error",
+                content : {
+                    description: "pass must contain alphanumeric values",
+                    error_code: "pass_format"
+                }
+            }
+        );
+        return;
+    }
+
+    if(req.body.name == undefined || req.body.name.length == 0){
+        res.status(400).
+            send(
+            {
+                status : "error",
+                content : {
+                    description: "Name can't be blank",
+                    error_code: "name_format"
                 }
             }
         );
@@ -39,20 +54,24 @@ router.post('/', function(req, res,next) {
     // Get our form values. These rely on the "name" attributes
     var pass = req.body.pass;
     var email = req.body.email;
+    var name = req.body.name;
 
     // Check unused email
-    User.find({ 'email': email }, function (err, docs) {
+    User.find({ 'email': email }, function (err, users) {
 
 
-        if(docs.length != 0){
+        if(users.length != 0){
             res.status(400).
                 send(
                 {
-                    message: "email already used",
-                    status : "error"
+                    status : "error",
+                    content: {
+                        description: "email already used",
+                        error_code: "email_used"
+                    }
                 }
             );
-            return next();
+            return;
         }
         else{
             //Hash password
@@ -64,7 +83,9 @@ router.post('/', function(req, res,next) {
                     var user = new User(
                         {
                             "pass" : hash,
-                            "email" : email
+                            "email" : email,
+                            "isAdmin": false,
+                            "name" : name
                         }
                     );
 
@@ -94,6 +115,19 @@ router.post('/', function(req, res,next) {
 
 
 
+});
+
+router.get('/', function(req,res){
+    User.find({})
+        .select("email name isAdmin")
+        .exec(function(error,docs){
+            res.send({
+                status: "success",
+                content: {
+                    users : docs
+                }
+            });
+    });
 });
 
 module.exports = router;
