@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<sidebar>
 
-</body>
-</html>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+
+    <div class="col-lg-12">
+        <rd-widget>
+            <rd-widget-header icon="fa-users" title="Pacientes">
+                <input type="text" placeholder="Buscar" class="form-control input-sm" />
+            </rd-widget-header>
+            <rd-widget-body classes="medium no-padding">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ID</th>
+                            <th>Estudio</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="patient in patients">
+                            <td class="text-center">
+                                <a>
+                                    {{patient.patientId}}
+                                </a>
+
+                            </td>
+                            <td>
+                                <a ng-repeat="study in patient.studies">
+                                    {{study.studyId}}
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+            <rd-widget>
+                <div class="form-group row">
+                    <span class="col-xs-4 btn-default btn btn-file">
+                        {{uploadFile.name || 'Seleccionar...'}}
+                        <input type='file' file-model='uploadFile' >
+                    </span>
+
+                    <button type="button" ng-click="upload(uploadFile)" class="btn btn-primary col-xs-2">Subir</button>
+                </div>
+    </div>
+</sidebar>

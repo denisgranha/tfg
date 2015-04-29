@@ -5,26 +5,31 @@
             <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" >Iniciar sesión</a></div>
         </div>
         <div class="panel-body" >
-            <form id="signupform" class="form-horizontal" role="form">
+            <form id="signupform" class="form-horizontal" role="form" ng-submit="signup()">
 
                 <div id="signupalert" style="display:none" class="alert alert-danger">
                     <p>Error:</p>
                     <span></span>
                 </div>
 
-
+                <div class="form-group">
+                    <label for="registro-name" class="col-md-3 control-label">Nombre</label>
+                    <div class="col-md-9">
+                        <input id="registro-name" ng-model="name" type="text" class="form-control" name="name" placeholder="Ej: Dr. Denís Graña" required>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="registro-email" class="col-md-3 control-label">Email</label>
                     <div class="col-md-9">
-                        <input id="registro-email" type="text" class="form-control" name="email" placeholder="Email Address">
+                        <input id="registro-email" ng-model="email" type="text" class="form-control" name="email" placeholder="Ej: denisgranha@gmail.com" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="registro-password" class="col-md-3 control-label">Password</label>
                     <div class="col-md-9">
-                        <input id="registro-password" type="password" class="form-control" name="password" placeholder="Password">
+                        <input id="registro-password" ng-model="password" type="password" class="form-control" name="password" placeholder="Password" required>
                     </div>
                 </div>
 
@@ -32,7 +37,7 @@
                 <div class="form-group">
                     <!-- Button -->
                     <div class="col-md-offset-3 col-md-9">
-                        <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Registrar</button>
+                        <input type="submit" id="btn-signup" type="button" class="btn btn-info" value="Registrar">
 
                     </div>
                 </div>

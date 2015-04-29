@@ -2,15 +2,24 @@
  * Created by anger on 3/3/15.
  */
 
-myApp.service('User',function($rootScope,$http){
-    this.signup = function(email,password,callback,error){
+(function() {
+    angular.module('frontend')
+        .service('User', function ($rootScope, $http) {
+            this.signup = function (email, password,name) {
 
-        var url = $rootScope.backend + "user";
-        var data = {
-            email : email,
-            pass: password
-        }
+                var url = $rootScope.backend + "user";
+                var datos = {
+                    email: email,
+                    pass: password,
+                    name: name
+                }
 
-        $http.post(url,data).success(callback).error(error);
-    }
-});
+                return $http.post(url, datos);
+            }
+
+            this.getAll = function(){
+                var url = $rootScope.backend + "user";
+                return $http.get(url);
+            }
+        });
+})();

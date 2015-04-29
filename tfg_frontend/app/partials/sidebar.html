@@ -1,10 +1,115 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div id="page-wrapper" ng-controller="SideBarCtrl" ng-class="{'open': toggle}" ng-cloak>
 
-</body>
-</html>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar">
+            <li class="sidebar-main">
+                <a ng-click="toggleSidebar()">
+                    TFG
+                    <span class="menu-icon glyphicon glyphicon-transfer"></span>
+                </a>
+            </li>
+            <li class="sidebar-title"><span>Navegación</span></li>
+            <li class="sidebar-list">
+                <a href="#/home">Inicio <span class="menu-icon fa fa-tachometer"></span></a>
+            </li>
+            <li class="sidebar-list">
+                <a href="#/patients">Pacientes <span class="menu-icon fa fa-user-md"></span></a>
+            </li>
+            <li class="sidebar-list">
+                <a href="#/users">Usuarios <span class="menu-icon fa fa-hospital-o"></span></a>
+            </li>
+
+        </ul>
+        <div class="sidebar-footer">
+            <div class="col-xs-4">
+                <a href="https://github.com/rdash/rdash-angular" target="_blank">
+                    Github
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a href="http://denisgranha.com" target="_blank">
+                    Acerca de
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a href="http://denisgranha.com" target="_blank">
+                    Soporte
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div id="content-wrapper">
+        <div class="page-content">
+
+            <!-- Header Bar -->
+            <div class="row header">
+                <div class="col-xs-12">
+                    <div class="user pull-right">
+
+                        <div class="item dropdown" dropdown on-toggle="toggled(open)">
+                            <a href="" class="dropdown-toggle" dropdown-toggle>
+                                <img src="img/avatar.jpg">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="dropdown-header">
+                                    Joe Bloggs
+                                </li>
+                                <li class="divider"></li>
+                                <li class="link">
+                                    <a href="">
+                                        Profile
+                                    </a>
+                                </li>
+                                <li class="link">
+                                    <a href="">
+                                        Menu Item
+                                    </a>
+                                </li>
+                                <li class="link">
+                                    <a href="">
+                                        Menu Item
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="link">
+                                    <a href="">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="item dropdown" dropdown on-toggle="toggled(open)">
+                            <a href="" class="dropdown-toggle" dropdown-toggle>
+                                <i class="fa fa-bell-o"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="dropdown-header">
+                                    Notifications
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="">Server Down!</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <div class="page">
+                            {{location}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- End Header Bar -->
+
+            <div ng-transclude>
+                <!-- content -->
+            </div>
+
+        </div><!-- End Page Content -->
+    </div><!-- End Content Wrapper -->
+</div><!-- End Page Wrapper -->

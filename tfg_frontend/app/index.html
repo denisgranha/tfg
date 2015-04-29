@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>
+<html lang="en" ng-app="frontend" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="frontend" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="frontend" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="frontend" class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,6 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/rdash-ui/dist/css/rdash.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 </head>
 <body>
 
@@ -28,10 +35,28 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/angular-jwt/dist/angular-jwt.min.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src='bower_components/angular-file-model/angular-file-model.js'></script>
+
     <script src="app.js"></script>
+    <script src="routes.js"></script>
+    <script src="config.js"></script>
     <script src="services/Auth.js"></script>
+    <script src="services/User.js"></script>
+    <script src="services/Patient.js"></script>
     <script src="controllers/LoginCtrl.js"></script>
     <script src="controllers/SignUpCtrl.js"></script>
+    <script src="controllers/HomeCtrl.js"></script>
+    <script src="controllers/PatientsCtrl.js"></script>
+    <script src="controllers/UserCtrl.js"></script>
+    <script src="controllers/SideBarCtrl.js"></script>
+    <script src="directives/Sidebar.js"></script>
+    <script src="directives/loading.js"></script>
+    <script src="directives/widget-body.js"></script>
+    <script src="directives/widget-footer.js"></script>
+    <script src="directives/widget-header.js"></script>
+    <script src="directives/widget.js"></script>
 
 </body>
 </html>

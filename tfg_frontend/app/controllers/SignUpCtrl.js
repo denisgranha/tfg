@@ -1,11 +1,15 @@
-myApp.controller('SignUpCtrl',function($scope,Auth,User,jwtHelper) {
+(function() {
+    angular.module('frontend')
+        .controller('SignUpCtrl', function ($scope, Auth, User, $location) {
 
-    $scope.signup = function(){
-        User.signup($scope.email,$scope.password,function(result){
-            console.log(result);
-        },
-        function(error){
-            console.log("error");
+            $scope.signup = function () {
+                User.signup($scope.email, $scope.password,$scope.name)
+                    .success(function(result){
+                        $location.path("login");
+                    })
+                    .error(function(error){
+                        //TODO Alert
+                    });
+            }
         });
-    }
-});
+})();
