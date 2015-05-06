@@ -1,11 +1,14 @@
 (function(){
     angular.module('frontend')
-        .controller('HomeCtrl',function($scope,Auth,Patient) {
+        .controller('HomeCtrl',function($scope,Auth,Patient,Admin) {
             $scope.user = Auth.getUser();
-            if($scope.user.name)
-                $scope.location = "Bienvenido "+$scope.user.name+"!"
-            else
-                $scope.location = "Bienvenido!"
+
+            if($scope.user.name) {
+                $scope.location = "Bienvenido " + $scope.user.name + "!";
+            }
+            else {
+                $scope.location = "Bienvenido!";
+            }
 
             Patient.get()
                 .success(function(response){

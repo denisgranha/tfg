@@ -25,6 +25,22 @@
                    templateUrl: 'partials/users.html?1',
                     controller: 'UserCtrl'
                 }).
+                when('/recovery', {
+                    templateUrl: 'partials/recovery.html',
+                    controller: "RecoveryCtrl"
+                }).
+                when('/reset/:token', {
+                    templateUrl: 'partials/reset.html',
+                    controller: "ResetCtrl"
+                }).
+                when('/admin/unactivated',{
+                    templateUrl: 'partials/admin/unactivated.html',
+                    controller: "UnactivatedCtrl"
+                }).
+                when('/patient/:id', {
+                   templateUrl: "partials/patient/studies.html",
+                    controller: "StudiesCtrl"
+                }).
                 otherwise({redirectTo: '/login'});
         }])
 })();

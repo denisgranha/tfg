@@ -75,7 +75,7 @@
                                 </li>
                                 <li class="divider"></li>
                                 <li class="link">
-                                    <a href="">
+                                    <a ng-click="logout()">
                                         Logout
                                     </a>
                                 </li>
@@ -83,16 +83,18 @@
                         </div>
                         <div class="item dropdown" dropdown on-toggle="toggled(open)">
                             <a href="" class="dropdown-toggle" dropdown-toggle>
-                                <i class="fa fa-bell-o"></i>
+                                <i class="fa fa-bell-o" ng-switch on="unactivated">
+                                    <span class="text-danger" ng-switch-when="unactivated>0">{{unactivated.length}}</span>
+                                    <span class="text-success" ng-switch-default></span>
+                                </i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="dropdown-header">
-                                    Notifications
+                                <li ng-if="unactivated" class="dropdown-header">
+                                   <a href="#admin/unactivated">{{unactivated.length}} Usuarios pendientes de activación</a>
                                 </li>
+                                <!--
                                 <li class="divider"></li>
-                                <li>
-                                    <a href="">Server Down!</a>
-                                </li>
+                                -->
                             </ul>
                         </div>
                     </div>

@@ -3,11 +3,20 @@
  */
 (function(){
     angular.module('frontend')
-        .controller('SideBarCtrl',function($scope,$cookieStore){
+        .controller('SideBarCtrl',function($scope,$cookieStore,Auth,Admin,$location){
             /**
              * Sidebar Toggle & Cookie Control
              */
             var mobileView = 992;
+
+            $scope.user = Auth.getUser();
+
+            if($scope.user.isAdmin){
+                Admin.getUnactivatedUsers().
+                    success(function(res){
+                        $scope.unactivated = res.content.users;
+                    })
+            }
 
             $scope.getWidth = function() {
                 return window.innerWidth;
@@ -34,5 +43,10 @@
             window.onresize = function() {
                 $scope.$apply();
             };
+
+            $scope.logout = function(){
+                Auth.logout();
+                $location.path("#login");
+            }
         });
 })();

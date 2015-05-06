@@ -4,7 +4,7 @@
             $scope.location = "Pacientes";
             $scope.user = Auth.getUser();
 
-            Patient.get()
+            Patient.getAll()
                 .success(function(response){
                     $scope.patients = response.content.patients;
                 })

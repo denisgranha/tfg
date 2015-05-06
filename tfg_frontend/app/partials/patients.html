@@ -12,14 +12,14 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="text-center">ID</th>
+                            <th class="text-center">Paciente</th>
                             <th>Estudio</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="patient in patients">
                             <td class="text-center">
-                                <a>
+                                <a ng-href="{{'#/patient/' + patient.patientId}}">
                                     {{patient.patientId}}
                                 </a>
 

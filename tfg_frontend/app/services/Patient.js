@@ -1,8 +1,13 @@
 (function(){
     angular.module('frontend')
         .service('Patient',function($rootScope,$http){
-            this.get = function(){
+            this.getAll = function(){
                 var url = $rootScope.backend + "patient";
+                return $http.get(url);
+            };
+
+            this.get = function(id){
+                var url = $rootScope.backend + "patient/"+id;
                 return $http.get(url);
             };
 

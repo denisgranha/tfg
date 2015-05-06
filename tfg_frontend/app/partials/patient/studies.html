@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<sidebar>
+    <div class="col-lg-12">
+        <rd-widget>
+            <rd-widget-header icon="fa-users" title="Estudios">
+                <input type="text" placeholder="Buscar" class="form-control input-sm" />
+            </rd-widget-header>
+            <rd-widget-body classes="medium no-padding">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Estudio</th>
+                            <th>Series</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="study in studies">
+                            <td class="text-center">
+                                <a>
+                                    {{study.studyId}}
+                                </a>
 
-</body>
-</html>
+                            </td>
+                            <td>
+                                <a ng-repeat="serie in study.series">
+                                    {{serie.serieId}}
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+            <rd-widget>
+    </div>
+</sidebar>

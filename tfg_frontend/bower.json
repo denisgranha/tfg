@@ -14,6 +14,7 @@
     "bootstrap": "~3.3.2",
     "angular-jwt": "~0.0.6",
     "angular-local-storage": "~0.1.5",
-    "angular-file-model": "~0.3.0"
+    "angular-file-model": "~0.3.0",
+    "fontawesome": "~4.3.0"
   }
 }

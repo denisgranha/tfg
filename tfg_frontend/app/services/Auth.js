@@ -4,9 +4,9 @@
 
 (function() {
     angular.module('frontend')
-        .service('Auth', function ($rootScope, $http, localStorageService, jwtHelper) {
+        .service('Auth', function ($rootScope, $http, $window, jwtHelper) {
 
-            this.login = function (email, password, callback, error) {
+            this.login = function (email, password) {
 
                 var url = $rootScope.backend + "auth";
                 var data = {
@@ -14,24 +14,29 @@
                     pass: password
                 };
 
-                $http.post(url, data).success(callback).error(error);
-            }
+                return $http.post(url, data).success(function(result){
+                    $window.localStorage.setItem("token",result.content.token);
+                });
+            };
 
             this.isLoggedIn = function () {
-                var token = localStorageService.get("token");
-                if (token == null) {
+                var token = $window.localStorage.getItem("token");
+                if (token == null || token == undefined || token == "") {
                     return false;
                 }
                 else {
                     return !jwtHelper.isTokenExpired(token)
                 }
 
-            }
+            };
 
             this.getUser = function(){
-                return jwtHelper.decodeToken(localStorageService.get("token"));
-            }
+                return jwtHelper.decodeToken($window.localStorage.getItem("token"));
+            };
 
+            this.logout = function(){
+                $window.localStorage.removeItem("token");
+            }
 
         });
 })();
