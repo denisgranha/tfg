@@ -9,11 +9,6 @@ var multer  = require('multer');
 //Request Parser for Body
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var user = require('./routes/user');
-var auth = require('./routes/auth');
-var patient = require('./routes/patient');
-var image = require('./routes/image');
 
 // MongoDB Code
 var mongoose = require('mongoose');
@@ -39,7 +34,6 @@ app.use(
 if (app.get('env') === 'test') {
 
     mongoose.connect('mongodb://localhost/tfg_test');
-
 }
 else{
     mongoose.connect('mongodb://localhost/tfg');
@@ -57,6 +51,7 @@ app.use(logger('dev'));
 //CORS Security for integration with Angularjs
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
@@ -66,13 +61,8 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-app.use('/', routes);
-app.use('/user', user);
-app.use('/auth',auth);
-app.use('/patient',patient);
-app.use('/image',image);
+//routes
+var routes = require('./routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -106,17 +96,20 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
-
 if (app.get('env') === 'test') {
 
     //Iniciamos servidor de test
     var server = app.listen(config.test_port, function () {
 
-        var host = server.address().address
-        var port = server.address().port
+        var host = server.address().address;
+        var port = server.address().port;
 
         console.log('Example app listening at http://%s:%s', host, port)
 
     })
 }
+
+
+
+
+module.exports = app;

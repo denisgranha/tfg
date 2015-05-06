@@ -7,8 +7,10 @@ var UserSchema = new mongoose.Schema(
         name: String,
         isAdmin: {type: Boolean, default: false},
         resetPasswordToken: String,
-        resetPasswordExpires: Date
+        resetPasswordExpires: Date,
+        isActive: {type: Boolean, default: false}
     }
 );
+
 
 module.exports = mongoose.model('User', UserSchema);

@@ -3,9 +3,9 @@ var router = express.Router();
 var AdmZip = require('adm-zip');
 var fs = require('fs');
 
-var fileManager = require(__dirname + "/../helpers/fileManager");
-var isDicomDirectory = require(__dirname+"/../helpers/dicomManager").isDicomDirectory;
-var getDicomObject = require(__dirname+"/../helpers/dicomManager").getDicomObject;
+var fileManager = require("../helpers/fileManager");
+var isDicomDirectory = require("../helpers/dicomManager").isDicomDirectory;
+var getDicomObject = require("../helpers/dicomManager").getDicomObject;
 var Patient = require("../models/Patient");
 
 
@@ -169,13 +169,10 @@ router.get('/', function(req, res,next) {
     });
 });
 
-router.param('id', function(req,res,next,id){
-    req.params.id = id;
-    next();
-});
+
 router.get('/:id',function(req,res){
     Patient.find({patientId: req.params.id})
-        .select("patientId studies.studyId studies.series.serieId studies.series.images.imageId studies.series.images._id")
+        .select("patientId studies.studyId studies.series.serieId studies.series.images.imageId studies.series.images._id studies.series.images.imageId ")
         .exec(function(e,docs){
             res.send(
                 {

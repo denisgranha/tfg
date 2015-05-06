@@ -45,47 +45,65 @@ router.post('/', function(req, res, next){
             res.status(400).
                 send(
                 {
-                    message: "wrong email",
-                    status : "error"
+                    status : "error",
+                    content: {
+                        message: "wrong email",
+                        error_code: "wrong_credentials"
+                    }
                 }
             );
-            return next();
         }
         else{
             user = docs[0];
-            bcrypt.compare(pass, user.pass, function(err, same_value) {
-                if(same_value){
-                    //Generamos JWT
+            if(user.isActive){
+                bcrypt.compare(pass, user.pass, function(err, same_value) {
+                    if(same_value){
+                        //Generamos JWT
 
-                    var cert = fs.readFileSync(__dirname+'/../server.key');  // get private key
+                        var cert = fs.readFileSync(__dirname+'/../server.key');  // get private key
 
-                    var options = {
-                        algorithm: 'RS256',
-                        expiresInMinutes: 60
-                    };
+                        var options = {
+                            algorithm: 'RS256',
+                            expiresInMinutes: 60
+                        };
 
-                    var token = jwt.sign({ email: user.email,name: user.name },cert, options);
+                        var token = jwt.sign({ email: user.email,name: user.name,isAdmin:user.isAdmin},cert, options);
 
-                    res.send(
-                        {
-                            status:"success",
-                            content: {
-                                token : token
+                        res.send(
+                            {
+                                status:"success",
+                                content: {
+                                    token : token
+                                }
                             }
-                        }
-                    );
+                        );
 
-                }
-                else{
-                    res.status(400).
-                        send(
-                        {
-                            message: "wrong pass",
-                            status : "error"
+                    }
+                    else{
+                        res.status(400).
+                            send(
+                            {
+                                status : "error",
+                                content: {
+                                    error_code: "wrong_pass"
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+            else{
+                res.status(400).
+                    send(
+                    {
+                        status : "error",
+                        content: {
+                            error_code: "user_activation",
+                            description: "The user "+docs[0].email+" is not activated"
                         }
-                    );
-                }
-            });
+                    }
+                );
+            }
 
         }
 
