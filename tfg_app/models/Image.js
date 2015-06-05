@@ -3,14 +3,17 @@ var mongooseFS = require('mongoose-fs');
 
 var ImageSchema = new mongoose.Schema(
     {
-        imageId: String,
+        imageId: mongoose.Schema.ObjectId,
+        imageName: String,
+        studyId: String,
+        serieId: String,
         headers: [
             {
                 tag: String,
                 value: String
             }
         ],
-        image: Buffer
+        image: Buffer// De esto se encarga GridFS
     }
 );
 

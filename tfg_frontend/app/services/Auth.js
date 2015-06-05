@@ -30,6 +30,10 @@
 
             };
 
+            this.getToken = function(){
+                return $window.localStorage.getItem("token");
+            };
+
             this.getUser = function(){
                 return jwtHelper.decodeToken($window.localStorage.getItem("token"));
             };

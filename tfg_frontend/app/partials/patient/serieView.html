@@ -1,0 +1,19 @@
+<sidebar>
+    <div class="row container form-inline">
+        <slider class="col-lg-8"
+                ng-model="image.index"
+                min="0"
+                max="dicom.length-1"
+                step="1"
+                value="0">
+        </slider>
+        <input type="number" min="0" max="dicom.length-1" ng-model="image.index" class="form-control col-lg-1">
+    </div>
+        <div id="dicomContainer"
+             serie-image="{{image.id}}"
+             class="col-lg-10 col-xs-11 col-md-9 img-responsive cornerstone-enabled-image thumbnail"
+             ng-mousedown="move($event)"
+             style="height: 40vw;"
+             msd-wheel="zoom($event)">
+        </div>
+</sidebar>

@@ -9,6 +9,65 @@ expect = require('expect.js');
 var User = require('../models/User');
 var bcrypt = require('bcrypt');
 
+var token= "";
+var token_admin= "";
+before(function(done){
+
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash("pass", salt, function (err, hash) {
+            var user_data = {
+                pass: hash,
+                email:"activado@gmail.com",
+                name: "cuenta activada",
+                isAdmin: false,
+                isActive: true
+            };
+
+            new User(user_data).save(
+                function(error,saved){
+                    user_data.pass = "pass";
+                    superagent.post(config.test_host+"auth")
+                        .send(user_data)
+                        .end(function(e,res){
+
+                            //Check token
+                            token = res.body.content.token;
+                            expect(token).to.be.an('string');
+                            done();
+                        });
+                });
+        });
+    });
+});
+before(function(done){
+
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash("pass", salt, function (err, hash) {
+            var user_data = {
+                pass: hash,
+                email:"admin@gmail.com",
+                name: "cuenta admin",
+                isAdmin: true,
+                isActive: true
+            };
+
+            new User(user_data).save(
+                function(error,saved){
+                    user_data.pass = "pass";
+                    superagent.post(config.test_host+"auth")
+                        .send(user_data)
+                        .end(function(e,res){
+
+                            //Check token
+                            token_admin = res.body.content.token;
+                            expect(token_admin).to.be.an('string');
+                            done();
+                        });
+                });
+        });
+    });
+});
+
 
 describe('User Signup', function(){
 
@@ -256,21 +315,54 @@ describe('User CRUD operations', function(){
                 expect(res.status).to.be.eql(200);
                 expect(res.body).to.be.an('object');
                 expect(res.body.status).to.be.eql("success");
-                superagent.get(config.test_host+"user")
-                    .end(function(e,res){
-                        expect(res.status).to.be.eql(200);
-                        expect(res.body).to.be.an('object');
-                        expect(res.body.status).to.be.eql("success");
-                        expect(res.body.content.users).to.be.an('array');
-                        expect(res.body.content.users.length).to.be.eql(1);
-                        done();
-                    });
-            })
+                User.update({email:user_data.email},{isActive:true}, function(error,update){
+                    //login cause is a secured function
+
+                    superagent.get(config.test_host+"user")
+                        .set('Authorization', token)
+                        .end(function(e,res){
+
+                            expect(res.status).to.be.eql(200);
+                            expect(res.body).to.be.an('object');
+                            expect(res.body.status).to.be.eql("success");
+                            expect(res.body.content.users).to.be.an('array');
+                            expect(res.body.content.users.length).to.be.eql(1);
+                            done();
+                        });
+
+                });
+
+            });
     });
 
-    it('remove user', function(done){
+    it('failed get all users due to authorization', function(done){
+        //Register one user and get it
+        superagent.post(config.test_host+"user")
+            .send(user_data)
+            .end(function(e,res){
+                expect(res.status).to.be.eql(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body.status).to.be.eql("success");
+
+                    superagent.get(config.test_host+"user")
+                        .set('Authorization', "nada")
+                        .end(function(e,res){
+
+                            expect(res.status).to.be.eql(400);
+                            expect(res.body).to.be.an('object');
+                            expect(res.body.status).to.be.eql("error");
+                            expect(res.body.content.error_code).to.be.eql('wrong_credentials');
+                            done();
+                        });
+
+            });
+    });
+
+
+    it('failed remove user', function(done){
         //Signup
         superagent.post(config.test_host+"user")
+            .set('Authorization', token)
             .send(user_data)
             .end(function(e,res){
                 expect(res.status).to.be.eql(200);
@@ -279,6 +371,39 @@ describe('User CRUD operations', function(){
                 //Remove user
                 var id = res.body.content.user._id;
                 superagent.del(config.test_host+"user/"+id)
+                    .set('Authorization', token)
+                    .end(function(e,res){
+                        expect(res.status).to.be.eql(400);
+                        expect(res.body).to.be.an('object');
+                        expect(res.body.status).to.be.eql("error");
+
+                        //Check if was removed
+                        superagent.get(config.test_host+"user/"+id)
+                            .set('Authorization', token)
+                            .end(function(e,res){
+                                expect(res.status).to.be.eql(200);
+                                expect(res.body).to.be.an('object');
+                                expect(res.body.status).to.be.eql("success");
+                                done();
+                            });
+                    });
+            })
+    });
+
+    //Admin privileges
+    it('correct remove user', function(done){
+        //Signup
+        superagent.post(config.test_host+"user")
+            .set('Authorization', token_admin)
+            .send(user_data)
+            .end(function(e,res){
+                expect(res.status).to.be.eql(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body.status).to.be.eql("success");
+                //Remove user
+                var id = res.body.content.user._id;
+                superagent.del(config.test_host+"user/"+id)
+                    .set('Authorization', token_admin)
                     .end(function(e,res){
                         expect(res.status).to.be.eql(200);
                         expect(res.body).to.be.an('object');
@@ -286,6 +411,7 @@ describe('User CRUD operations', function(){
 
                         //Check if was removed
                         superagent.get(config.test_host+"user/"+id)
+                            .set('Authorization', token_admin)
                             .end(function(e,res){
                                 expect(res.status).to.be.eql(400);
                                 expect(res.body).to.be.an('object');

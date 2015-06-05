@@ -41,6 +41,10 @@
                    templateUrl: "partials/patient/studies.html",
                     controller: "StudiesCtrl"
                 }).
+                when('/patient/:patientId/study/:studyId/serie/:serieId', {
+                    templateUrl: "partials/patient/serieView.html",
+                    controller: "SerieViewCtrl"
+                }).
                 otherwise({redirectTo: '/login'});
         }])
 })();

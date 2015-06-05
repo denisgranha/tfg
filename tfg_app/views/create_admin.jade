@@ -1,0 +1,11 @@
+//
+   Created by anger on 18/5/15.
+extends layout
+block content
+    .container
+    h1.text-center= title
+    form.text-center.center-block(name="login", action="/config", method="post")
+        input.form-control(type="text", name="name", placeholder="Nome")
+        input.form-control(type="email", name="email", placeholder="Email")
+        input.form-control(type="password", name="pass",placeholder="Contrasinal")
+        input.btn.btn-large.btn-primary(type="submit", value="Crear conta de Administración")

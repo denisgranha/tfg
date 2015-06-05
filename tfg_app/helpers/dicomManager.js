@@ -1,7 +1,7 @@
 /**
  * Created by anger on 13/4/15.
  */
-
+var mongoose = require('mongoose');
 var fileManager = require("./fileManager");
 var fs = require('fs');
 var dicomParser = require('../node_modules/dicom-parser/dist/dicomParser');
@@ -81,7 +81,8 @@ var isDicomDirectory = function(path) {
 
 
 function getDicomObject(path){
-    var result = [];
+    var patients_object = [];
+    var images_result = [];
 
     var patients = fs.readdirSync(path);
 
@@ -117,12 +118,22 @@ function getDicomObject(path){
                         }
                         ;
 
+                        var id = mongoose.Types.ObjectId();
 
                         images_object.push(
                             {
-                                imageId: images[w],
+                                imageId: id
+                            }
+                        );
+
+                        images_result.push(
+                            {
+                                imageId: id,
+                                imageName: images[w],
                                 headers: headers,
-                                image: dicomFileAsBuffer
+                                image: dicomFileAsBuffer,
+                                serieId: series[k],
+                                studyId: studies[j]
                             }
                         )
                     }
@@ -142,7 +153,7 @@ function getDicomObject(path){
                 )
             }
 
-            result.push(
+            patients_object.push(
                 {
                     patientId: patients[i],
                     studies: studies_object
@@ -150,7 +161,10 @@ function getDicomObject(path){
             );
         }
 
-        return result;
+        return {
+                    patients: patients_object,
+                    images: images_result
+                }
     }
     catch(e){
         return null;

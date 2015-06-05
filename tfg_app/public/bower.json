@@ -1,0 +1,20 @@
+{
+  "name": "tfg_app",
+  "version": "0.0.0",
+  "homepage": "https://github.com/denisgranha/tfg",
+  "authors": [
+    "Denís Graña <denisgranha@gmail.com>"
+  ],
+  "description": "Backend for medical viewer a magement tool",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4"
+  }
+}

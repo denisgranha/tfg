@@ -7,6 +7,7 @@ var fileManager = require("../helpers/fileManager");
 var isDicomDirectory = require("../helpers/dicomManager").isDicomDirectory;
 var getDicomObject = require("../helpers/dicomManager").getDicomObject;
 var Patient = require("../models/Patient");
+var Image = require("../models/Image");
 
 
 //Upload a study
@@ -21,12 +22,14 @@ router.post('/', function(req, res,next) {
 
         if(isDicomDirectory(__dirname+"/../uploads/extracted/")){
             //Construct object
-            var dicomObject = getDicomObject(__dirname+"/../uploads/extracted");
+            var dicom = getDicomObject(__dirname+"/../uploads/extracted");
+            var patientsObject = dicom.patients;
+            var imagesObject = dicom.images;
 
             //TODO NO GUARDA BIEN CON SUBDOCUMENTS
 
-            if(dicomObject) {
-                dicomObject.forEach(function (patient, index, array) {
+            if(patientsObject) {
+                patientsObject.forEach(function (patient, index, array) {
                     //TODO Al sublevels patient, study, series
 
                     Patient.find({patientId: patient.patientId}, function (e, patient_doc) {
@@ -34,24 +37,49 @@ router.post('/', function(req, res,next) {
                         if (patient_doc.length == 0) {
 
                             new Patient(patient).save(function (error, docs) {
-                                if(error){
+
+                                if ((index >= array.length - 1) && error) {
                                     res.set(400).send(
                                         {
-                                        status: "error",
-                                        content: {
-                                            description: error
+                                            status: "error",
+                                            content: {
+                                                description: error
                                             }
                                         }
                                     )
                                 }
-                                else if (index >= array.length - 1) {
-                                    fileManager.deleteFolderRecursive(__dirname + '/../uploads/extracted');
-                                    res.send(
-                                        {
-                                            status: "success"
-                                        }
-                                    );
+                                else{
+                                    //Guardar todas las imágenes del paciente
+                                    imagesObject.forEach(function(image,index,array){
+                                        new Image(image).save(function(error,saved){
+                                            if(index >= array.length-1){
+                                                if(error){
+                                                    res.status(400).send(
+                                                        {
+                                                            status: "error",
+                                                            content: {
+                                                                description: error
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                                else{
+                                                    fileManager.deleteFolderRecursive(__dirname + '/../uploads/extracted');
+                                                    res.send(
+                                                        {
+                                                            status: "success",
+                                                            content: {
+                                                                description: "Patient/s succesfully saved"
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                            }
+                                        })
+                                    });
                                 }
+
+
                             });
                         }
                         else {
@@ -61,6 +89,8 @@ router.post('/', function(req, res,next) {
                                     if (doc.length == 0) {
                                         //No tiene este estudio
                                         //TODO UPDATE
+
+                                        //TODO Guardar todas las imagenes del estudio
                                     }
                                     else {
                                         //miramos si tiene la misma serie
@@ -76,9 +106,10 @@ router.post('/', function(req, res,next) {
                                                             status: "success"
                                                         });
                                                     }                              //TODO UPDATE
+                                                    //TODO Guardar todas las imagenes de la serie
                                                 }
                                                 else {
-                                                    //TODO falle en cualquiera
+                                                    //TODO que falle en cualquiera serie, ahora solo si es la ultima del zip
                                                     //serie existente manda error
                                                     if (index >= array.length - 1) {
                                                         res.status(400).send({
@@ -183,6 +214,44 @@ router.get('/:id',function(req,res){
                 }
             );
         });
+});
+
+router.get("/:patientId/study/:studyId/serie/:serieId",function(req,res){
+
+    Patient.findOne({patientId: req.params.patientId},function(error,patient){
+        var i = 0;
+        while(patient.studies[i].studyId != req.params.studyId && i<patient.studies.length){
+            i++;
+        };
+        var j=0;
+        while(patient.studies[i].series[j].serieId != req.params.serieId && i<patient.studies[i].series.length){
+            j++;
+        }
+        res.send(
+            {
+                status: "success",
+                content: patient.studies[i].series[j]
+            }
+
+        );
+    });
+});
+
+router.delete("/:patientId",function(req,res){
+
+    Patient.remove({patientId: req.params.patientId},function(error,patient){
+        //TODO remove all images
+
+        res.send(
+            {
+                status: "success",
+                content: {
+                    description: "user removed"
+                }
+            }
+
+        );
+    });
 });
 
 module.exports = router;

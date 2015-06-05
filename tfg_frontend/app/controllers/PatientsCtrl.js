@@ -22,10 +22,16 @@
                     .error(function(error){
                         $scope.alerts.push({ type: 'danger', msg: error });
                     })
-            }
+            };
 
             $scope.alerts = [
             ];
+
+            $scope.removePatient = function(id){
+                Patient.removePatient(id).success(function(result){
+                    console.log(result);
+                });
+            };
 
 
             $scope.closeAlert = function(index) {

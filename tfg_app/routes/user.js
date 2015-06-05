@@ -6,6 +6,7 @@ var validator = require('validator');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var config = require("../config");
+var jwt = require('jsonwebtoken');
 
 
 router.post('/', function(req, res,next) {
@@ -202,28 +203,44 @@ router.delete('/:id', function(req,res){
             )
         }
        else{
-            User.remove({_id: req.params.id}, function(error,deleted){
-                if(error){
-                    res.status(400)
-                        .send(
-                        {
-                            status:"error",
-                            content: {
-                                error_code: "cant_remove_user",
-                                description: "Can't remove user from the system"
-                            }
-                        }
-                    )
-                }
-                res.send(
-                    {
-                        status: "success",
-                        content: {
-                            description: "The user with id: "+req.params.id+" was deleted"
-                        }
-                    }
-                )
-            })
+           //TODO Check token is from admin user.
+           var token_info = jwt.decode(req.headers.authorization);
+           if(token_info.isAdmin){
+               User.remove({_id: req.params.id}, function(error,deleted){
+                   if(error){
+                       res.status(400)
+                           .send(
+                           {
+                               status:"error",
+                               content: {
+                                   error_code: "cant_remove_user",
+                                   description: "Can't remove user from the system"
+                               }
+                           }
+                       )
+                   }
+                   res.send(
+                       {
+                           status: "success",
+                           content: {
+                               description: "The user with id: "+req.params.id+" was deleted"
+                           }
+                       }
+                   )
+               })
+           }
+           else{
+               res.status(400)
+                   .send(
+                   {
+                       status:"error",
+                       content: {
+                           error_code: "forbidden_operation",
+                           description: "You don't have permission to do that"
+                       }
+                   }
+               )
+           }
         }
    });
 });

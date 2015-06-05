@@ -11,7 +11,7 @@ var PatientSchema = new mongoose.Schema(
                         serieId: String,
                         images: [
                             {
-                                imageId: String
+                                imageId: mongoose.Schema.ObjectId
                             }
                         ]
                     }

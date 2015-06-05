@@ -4,7 +4,7 @@
             <rd-widget-header icon="fa-users" title="Estudios">
                 <input type="text" placeholder="Buscar" class="form-control input-sm" />
             </rd-widget-header>
-            <rd-widget-body classes="medium no-padding">
+            <rd-widget-body classes="large no-padding">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -22,8 +22,13 @@
 
                             </td>
                             <td>
-                                <a ng-repeat="serie in study.series">
-                                    {{serie.serieId}}
+                                <a ng-href="{{'#/patient/'+id+'/study/'+study.studyId+'/serie/'+serie.serieId}}" ng-repeat="serie in study.series">
+                                    <div ng-if="$index % 3 == 0" class="clearfix"></div>
+                                    <div class="col-lg-3 thumbnail" serie-image="{{serie.images[0].imageId}}">
+                                        <div class="caption">
+                                            {{serie.serieId}}
+                                        </div>
+                                    </div>
                                 </a>
                             </td>
                         </tr>

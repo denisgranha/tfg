@@ -63,7 +63,6 @@ router.post('/', function(req, res, next){
                         var cert = fs.readFileSync(__dirname+'/../server.key');  // get private key
 
                         var options = {
-                            algorithm: 'RS256',
                             expiresInMinutes: 60
                         };
 

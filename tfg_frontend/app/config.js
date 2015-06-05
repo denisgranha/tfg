@@ -8,8 +8,13 @@
                     $rootScope.backend = "http://localhost:3000/";
                 }]
             )
-        .config(function (localStorageServiceProvider) {
-            localStorageServiceProvider
-                .setPrefix('frontend');
+        .config(function (jwtInterceptorProvider,$httpProvider) {
+
+            jwtInterceptorProvider.authPrefix = "";
+            jwtInterceptorProvider.tokenGetter = ['Auth', function(Auth) {
+                return Auth.getToken();
+            }];
+
+            $httpProvider.interceptors.push('jwtInterceptor');
         });
 })();

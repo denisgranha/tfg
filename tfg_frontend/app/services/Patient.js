@@ -11,6 +11,16 @@
                 return $http.get(url);
             };
 
+            this.getSerie = function(patient,study,serie){
+                var url = $rootScope.backend + "patient/"+patient+"/study/"+study+"/serie/"+serie;
+                return $http.get(url);
+            };
+
+            this.removePatient = function(id){
+                var url = $rootScope.backend + "patient/"+id;
+                return $http.delete(url);
+            };
+
             this.upload = function(file){
                 console.log(file);
                 var url = $rootScope.backend + "patient";
@@ -23,6 +33,6 @@
                         transformRequest: angular.identity,
                         headers: {'Content-Type': undefined}
                     });
-            }
+            };
         });
 })();

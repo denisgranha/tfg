@@ -8,7 +8,9 @@ angular.module('frontend',
         'angular-jwt',
         'LocalStorageModule',
         'ngCookies',
-        'file-model'
+        'file-model',
+        'ui.bootstrap-slider',
+        'monospaced.mousewheel'
     ]
 );
 
